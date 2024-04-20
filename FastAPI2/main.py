@@ -26,12 +26,12 @@ def connect_to_snowflake():
     return conn
 
 
-@app.post("/snowflake-data")
+@app.get("/snowflake-data")
 async def get_snowflake_data():
     try:
         conn = connect_to_snowflake()
         cursor = conn.cursor()
-        cursor.execute("SELECT TOP 1000 ROW_ID, LATITUDE, LONGITUDE FROM incident_reports WHERE LATITUDE is not null AND LONGITUDE is not null")
+        cursor.execute("SELECT TOP 100 ROW_ID, LATITUDE, LONGITUDE FROM incident_reports WHERE LATITUDE is not null AND LONGITUDE is not null")
         result = cursor.fetchall()
         cursor.close()
         conn.close()

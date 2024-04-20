@@ -5,6 +5,7 @@ import os
 import hashlib
 import re
 import requests
+import pandas as pd
 
 # Load environment variables
 load_dotenv(override=True)
@@ -224,16 +225,34 @@ def log_incident(date, time, location, incident_category, incident_subcategory, 
 def fetch_crime_data():
     st.write("Outside try")
     try:
-        st.write("In try")
-        response = requests.get("http://finalproject-fastapi2:8075/snowflake-data")
-        data = response.json()
-        if data:
-            st.write("JSON value for the first row:")
-            st.json(data[0])
-            locations = [(row[3], row[2]) for row in data]
-            st.map(locations)
-        else:
-            st.write("No data available.")
+        with st.spinner("Loading"):
+            st.write("In try")
+            response = requests.get("http://fastapi2:8075/snowflake-data")
+            data = response.json()['data']
+            
+            if data:
+                # Create a DataFrame with proper column names for latitude and longitude
+                import pandas as pd
+                df = pd.DataFrame(data, columns=['Column0', 'LATITUDE', 'LONGITUDE'])
+                # Convert latitude and longitude from string to float if they are not already
+                df['LATITUDE'] = pd.to_numeric(df['LATITUDE'], errors='coerce')
+                df['LONGITUDE'] = pd.to_numeric(df['LONGITUDE'], errors='coerce')
+
+                grouped_df = df.groupby(by=['LATITUDE', 'LONGITUDE']).size().reset_index(name='count') # type: ignore
+
+                # Show the first few rows of the grouped data
+                st.write("Aggregated Locations with Count:")
+                st.write(grouped_df.head())
+
+                # Create a new column 'size' that represents the size of each bubble
+                # Adjust the scaling factor as needed to get a suitable bubble size
+                grouped_df['size'] = grouped_df['count'].apply(lambda x: x * 10)  # Scale factor example
+
+                # Plotting the data on the map
+                st.map(grouped_df.rename(columns={'LATITUDE': 'lat', 'LONGITUDE': 'lon', 'size': 'size'}))
+                
+            else:
+                st.write("No data available.")
     except Exception as e:
         st.error(f"An error occurred while fetching crime data: {e}")
 
