@@ -1,0 +1,4 @@
+dotenv
+apache-airflow
+plugins
+python-dotenv
