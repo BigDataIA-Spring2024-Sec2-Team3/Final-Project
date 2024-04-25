@@ -5,6 +5,10 @@ import os
 import hashlib
 import re
 import requests
+import pandas as pd
+import leafmap.foliumap as leafmap
+import pandas as pd
+from openai import OpenAI
 
 # Load environment variables
 load_dotenv(override=True)
@@ -15,6 +19,7 @@ snowflake_password = os.getenv("SNOWFLAKE_PASSWORD")
 snowflake_account = os.getenv("SNOWFLAKE_ACCOUNT")
 snowflake_database = os.getenv("SNOWFLAKE_DATABASE")
 snowflake_schema = os.getenv("SNOWFLAKE_SCHEMA")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 # Function to connect to Snowflake
 def connect_to_snowflake():
@@ -143,7 +148,7 @@ def get_subcategories(category):
 
 menu_selection = st.sidebar.radio(
     "Go to:",
-    ("Login", "Sign Up", "Log Incident", "Crime Data Map" , "Log Out")
+    ("Login", "Sign Up", "Log Incident", "Crime Data Map" , "Heat Map","AI Law Help","Log Out")
 )
 
 def register_new_user(username, password, full_name, email):
@@ -224,16 +229,32 @@ def log_incident(date, time, location, incident_category, incident_subcategory, 
 def fetch_crime_data():
     st.write("Outside try")
     try:
-        st.write("In try")
-        response = requests.get("http://finalproject-fastapi2:8075/snowflake-data")
-        data = response.json()
-        if data:
-            st.write("JSON value for the first row:")
-            st.json(data[0])
-            locations = [(row[3], row[2]) for row in data]
-            st.map(locations)
-        else:
-            st.write("No data available.")
+        with st.spinner("Loading"):
+            st.write("In try")
+            response = requests.get("http://localhost:8000/snowflake-data")
+            data = response.json()['data']
+            
+            if data:
+                # Create a DataFrame with proper column names for latitude and longitude
+                
+                df = pd.DataFrame(data, columns=['Column0', 'LATITUDE', 'LONGITUDE'])
+                # Convert latitude and longitude from string to float if they are not already
+                df['LATITUDE'] = pd.to_numeric(df['LATITUDE'], errors='coerce')
+                df['LONGITUDE'] = pd.to_numeric(df['LONGITUDE'], errors='coerce')
+
+                grouped_df = df.groupby(by=['LATITUDE', 'LONGITUDE']).size().reset_index(name='count') # type: ignore
+
+                # Show the first few rows of the grouped data
+                st.write("Aggregated Locations with Count:")
+                st.write(grouped_df.head())
+
+                # Create a new column 'size' that represents the size of each bubble
+                # Adjust the scaling factor as needed to get a suitable bubble size
+                grouped_df['size'] = grouped_df['count'].apply(lambda x: x * 10)  # Scale factor example
+
+                return grouped_df
+            else:
+                st.write("No data available.")
     except Exception as e:
         st.error(f"An error occurred while fetching crime data: {e}")
 
@@ -284,8 +305,64 @@ elif menu_selection == "Crime Data Map":
     if "logged_in" in st.session_state and st.session_state.logged_in:
         st.title("Crime Data Map")
         st.write("Going to def")
-        fetch_crime_data()
+        grouped_df = fetch_crime_data()
+        # Plotting the data on the map
+        st.map(grouped_df.rename(columns={'LATITUDE': 'lat', 'LONGITUDE': 'lon', 'size': 'size'}))
         st.markdown("<hr/>", unsafe_allow_html=True)
+
+elif menu_selection == "Heat Map":
+    st.title('Heatmaps')
+
+    #filepath = "https://raw.githubusercontent.com/giswqs/leafmap/master/examples/data/us_cities.csv"
+    grouped_df = fetch_crime_data()
+    st.write(grouped_df)
+    m = leafmap.Map(center=[37.763, -122.47], zoom=12.2)
+    m.add_heatmap(
+        grouped_df,
+        latitude="LATITUDE",
+        longitude="LONGITUDE",
+        value="size",
+        name="Heat map",
+        radius=20,
+    )
+    m.to_streamlit()
+
+    
+elif menu_selection == "AI Law Help":
+    st.title("AI Law Help")
+    # Set OpenAI API key from Streamlit secrets
+    client = OpenAI(api_key=OPENAI_API_KEY)
+
+    # Set a default model
+    if "openai_model" not in st.session_state:
+        st.session_state["openai_model"] = "gpt-3.5-turbo"
+
+    # Initialize chat history
+    if "messages" not in st.session_state:
+        st.session_state.messages = []
+
+    # Display chat messages from history on app rerun
+    for message in st.session_state.messages:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
+
+    # Accept user input
+    if prompt := st.chat_input("What is up?"):
+        st.session_state.messages.append({"role": "user", "content": prompt})
+        with st.chat_message("user"):
+            st.markdown(prompt)
+
+        with st.chat_message("assistant"):
+            stream = client.chat.completions.create(
+                model=st.session_state["openai_model"],
+                messages=[
+                    {"role": m["role"], "content": m["content"]}
+                    for m in st.session_state.messages
+                ],
+                stream=True,
+            )
+            response = st.write_stream(stream)
+        st.session_state.messages.append({"role": "assistant", "content": response})
 
 elif menu_selection == "Log Out":
     st.title("Log Out")

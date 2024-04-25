@@ -64,35 +64,39 @@ copy_stage_to_table = """COPY INTO CRIMES.PROD.INCIDENT_REPORTS
 load_dotenv()
 
 u=os.getenv("SNOWFLAKE_USER")
-p=os.getenv("SNOWFLAKE_PASS")
-ai=os.getenv("SNOWFLAKE_ACCOUNTID")
+p=os.getenv("SNOWFLAKE_PASSWORD")
+ai=os.getenv("SNOWFLAKE_ACCOUNT")
 
 print([u,p,ai])
-engine = create_engine(
-    'snowflake://{user}:{password}@{account_identifier}/'.format(
-        user=u,
-        password=p,
-        account_identifier=ai,
+
+def upload():
+    engine = create_engine(
+        'snowflake://{user}:{password}@{account_identifier}/'.format(
+            user=u,
+            password=p,
+            account_identifier=ai,
+        )
     )
-)
 
 
 
-try:
-    connection = engine.connect()
-    connection.execute("USE WAREHOUSE SFCrimes")
-    connection.execute("USE DATABASE CRIMES")
-    connection.execute("USE SCHEMA PROD")
-    
-    results = connection.execute(create_stage)
-    results = connection.execute(create_table_query)
-    results = connection.execute(upload_to_stage)
-    results = connection.execute(copy_stage_to_table)
+    try:
+        connection = engine.connect()
+        connection.execute("USE WAREHOUSE SFCrimes")
+        connection.execute("USE DATABASE CRIMES")
+        connection.execute("USE SCHEMA PROD")
+        
+        results = connection.execute(create_stage)
+        results = connection.execute(create_table_query)
+        results = connection.execute(upload_to_stage)
+        results = connection.execute(copy_stage_to_table)
 
-except Exception as e:
-    print(f"Error: {e}")
-    
-finally:
-    print("Done")
-    connection.close()
-    engine.dispose()
+    except Exception as e:
+        print(f"Error: {e}")
+        
+    finally:
+        print("Done")
+        connection.close() # type: ignore
+        engine.dispose() # type: ignore
+
+upload()
