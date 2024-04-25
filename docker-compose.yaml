@@ -302,7 +302,7 @@ services:
       dockerfile: ./dockerfile
     restart: always
     ports:
-        - "8000:8000"
+        - "8075:8075"
     env_file:
       - .env
 
