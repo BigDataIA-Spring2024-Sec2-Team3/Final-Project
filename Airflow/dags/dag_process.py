@@ -6,6 +6,8 @@ from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
 from airflow.utils.dates import days_ago
 from datetime import timedelta
+from plugins.prapare_data import pulldata
+from plugins.upload_snowflake import upload
 
 load_dotenv(override= True)
 
@@ -17,3 +19,18 @@ dag = DAG(
     dagrun_timeout=timedelta(minutes=60),
     tags=["pdf_processing", "s3", "snowflake"],
 )
+
+with dag:
+
+    prepare_data_task = PythonOperator(
+        task_id='prepare_data',
+        execution_timeout=timedelta(minutes=20), # set timeout for the task
+        python_callable=pulldata,
+    )    
+
+    upload_snowflkae_task = PythonOperator(
+        task_id='upload',
+        python_callable=upload,
+    )    
+
+    prepare_data_task >> upload_snowflkae_task # type: ignore
