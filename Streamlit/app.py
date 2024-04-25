@@ -148,12 +148,16 @@ def get_subcategories(category):
 
 menu_selection = st.sidebar.radio(
     "Go to:",
-    ("Login", "Sign Up", "Log Incident", "Crime Data Map" , "Heat Map","AI Law Help","Log Out")
+    ("Login", "Sign Up", "Log Incident", "Crime Data Map" , "Heat Map","AI Law Help")
 )
 
 def register_new_user(username, password, full_name, email):
     conn, cursor = connect_to_snowflake()
     try:
+        if conn is None or cursor is None:
+            st.error("Failed to connect to the database.")
+            return
+        
         # Validate email format
         if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
             st.error("Invalid email address")
@@ -183,6 +187,10 @@ def register_new_user(username, password, full_name, email):
 def validate_user_credentials(username, password):
     conn, cursor = connect_to_snowflake()
     try:
+        if conn is None or cursor is None:
+            st.error("Failed to connect to the database.")
+            return
+         
         cursor.execute(f"SELECT user_id, password FROM users_project WHERE username = '{username}'")
         result = cursor.fetchone()
         if result:
@@ -212,6 +220,10 @@ def log_out():
 def log_incident(date, time, location, incident_category, incident_subcategory, description, police_district):
     conn, cursor = connect_to_snowflake()
     try:
+        if conn is None or cursor is None:
+            st.error("Failed to connect to the database.")
+            return
+        
         cursor.execute("""
             INSERT INTO crime_incidents (user_id, date, time, location, incident_category, incident_subcategory, description, police_district) 
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
@@ -227,22 +239,22 @@ def log_incident(date, time, location, incident_category, incident_subcategory, 
             conn.close()
 
 def fetch_crime_data():
-    st.write("Outside try")
+    #st.write("Outside try")
     try:
         with st.spinner("Loading"):
-            st.write("In try")
-            response = requests.get("http://localhost:8000/snowflake-data")
+            #st.write("In try")
+            response = requests.get("http://fastapi2:8075/snowflake-data")
             data = response.json()['data']
             
             if data:
                 # Create a DataFrame with proper column names for latitude and longitude
                 
-                df = pd.DataFrame(data, columns=['Column0', 'LATITUDE', 'LONGITUDE'])
+                df = pd.DataFrame(data, columns=['Column0','latitude', 'longitude', 'year'])
                 # Convert latitude and longitude from string to float if they are not already
-                df['LATITUDE'] = pd.to_numeric(df['LATITUDE'], errors='coerce')
-                df['LONGITUDE'] = pd.to_numeric(df['LONGITUDE'], errors='coerce')
+                df['latitude'] = pd.to_numeric(df['latitude'], errors='coerce')
+                df['longitude'] = pd.to_numeric(df['longitude'], errors='coerce')
 
-                grouped_df = df.groupby(by=['LATITUDE', 'LONGITUDE']).size().reset_index(name='count') # type: ignore
+                grouped_df = df.groupby(by=['latitude', 'longitude']).size().reset_index(name='count') # type: ignore
 
                 # Show the first few rows of the grouped data
                 st.write("Aggregated Locations with Count:")
@@ -304,67 +316,80 @@ elif menu_selection == "Log Incident":
 elif menu_selection == "Crime Data Map":
     if "logged_in" in st.session_state and st.session_state.logged_in:
         st.title("Crime Data Map")
-        st.write("Going to def")
+        #st.write("Going to def")
         grouped_df = fetch_crime_data()
         # Plotting the data on the map
-        st.map(grouped_df.rename(columns={'LATITUDE': 'lat', 'LONGITUDE': 'lon', 'size': 'size'}))
+        st.map(grouped_df.rename(columns={'latitude': 'lat', 'longitude': 'lon', 'size': 'size'}))
         st.markdown("<hr/>", unsafe_allow_html=True)
+        if st.button("Log Out"):
+            log_out()
 
 elif menu_selection == "Heat Map":
-    st.title('Heatmaps')
-
-    #filepath = "https://raw.githubusercontent.com/giswqs/leafmap/master/examples/data/us_cities.csv"
-    grouped_df = fetch_crime_data()
-    st.write(grouped_df)
-    m = leafmap.Map(center=[37.763, -122.47], zoom=12.2)
-    m.add_heatmap(
-        grouped_df,
-        latitude="LATITUDE",
-        longitude="LONGITUDE",
-        value="size",
-        name="Heat map",
-        radius=20,
-    )
-    m.to_streamlit()
+    if "logged_in" in st.session_state and st.session_state.logged_in:
+        st.title('Heatmaps')
+        #filepath = "https://raw.githubusercontent.com/giswqs/leafmap/master/examples/data/us_cities.csv"
+        grouped_df = fetch_crime_data()
+        st.write(grouped_df)
+        m = leafmap.Map(center=[37.763, -122.47], zoom=12.2)
+        m.add_heatmap(
+            grouped_df,
+            latitude="latitude",
+            longitude="longitude",
+            value="size",
+            name="Heat map",
+            radius=20,
+        )
+        m.to_streamlit()
+        if st.button("Log Out"):
+                log_out()
 
     
 elif menu_selection == "AI Law Help":
-    st.title("AI Law Help")
-    # Set OpenAI API key from Streamlit secrets
-    client = OpenAI(api_key=OPENAI_API_KEY)
+    if "logged_in" in st.session_state and st.session_state.logged_in:
+        st.title("AI Law Help")
+        # Set OpenAI API key from Streamlit secrets
+        client = OpenAI(api_key=OPENAI_API_KEY)
 
-    # Set a default model
-    if "openai_model" not in st.session_state:
-        st.session_state["openai_model"] = "gpt-3.5-turbo"
+        # Set a default model
+        if "openai_model" not in st.session_state:
+            st.session_state["openai_model"] = "gpt-3.5-turbo"
 
-    # Initialize chat history
-    if "messages" not in st.session_state:
-        st.session_state.messages = []
+        # Initialize chat history
+        if "messages" not in st.session_state:
+            st.session_state.messages = []
 
-    # Display chat messages from history on app rerun
-    for message in st.session_state.messages:
-        with st.chat_message(message["role"]):
-            st.markdown(message["content"])
+        # Display chat messages from history on app rerun
+        for message in st.session_state.messages:
+            with st.chat_message(message["role"]):
+                st.markdown(message["content"])
 
-    # Accept user input
-    if prompt := st.chat_input("What is up?"):
-        st.session_state.messages.append({"role": "user", "content": prompt})
-        with st.chat_message("user"):
-            st.markdown(prompt)
+        # Accept user input
+        if prompt := st.chat_input("What is up?"):
+            st.session_state.messages.append({"role": "user", "content": prompt})
+            with st.chat_message("user"):
+                st.markdown(prompt)
 
-        with st.chat_message("assistant"):
-            stream = client.chat.completions.create(
-                model=st.session_state["openai_model"],
-                messages=[
-                    {"role": m["role"], "content": m["content"]}
-                    for m in st.session_state.messages
-                ],
-                stream=True,
-            )
-            response = st.write_stream(stream)
-        st.session_state.messages.append({"role": "assistant", "content": response})
+            with st.chat_message("assistant"):
+                stream = client.chat.completions.create(
+                    model=st.session_state["openai_model"],
+                    messages=[
+                        {"role": m["role"], "content": m["content"]}
+                        for m in st.session_state.messages
+                    ],
+                    stream=True,
+                )
+                response = st.write_stream(stream)
+            st.session_state.messages.append({"role": "assistant", "content": response})
 
-elif menu_selection == "Log Out":
-    st.title("Log Out")
-    if st.button("Log Out"):
-        log_out()
+# elif menu_selection == "Log Out":
+#     st.title("Log Out")
+#     if st.button("Log Out"):
+#         log_out()
+
+# [theme]
+
+# primaryColor = "#E694FF"
+# backgroundColor = "#00172B"
+# secondaryBackgroundColor = "#0083B8"
+# textColor = "#C6CDD4"
+# font = "sans-serif"
