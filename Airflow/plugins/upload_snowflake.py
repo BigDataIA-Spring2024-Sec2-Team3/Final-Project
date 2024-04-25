@@ -7,11 +7,11 @@ import bcrypt
 import os
 import csv
 
-load_dotenv()
+load_dotenv(override=True)
 
-create_stage = """CREATE OR REPLACE STAGE STAGING DIRECTORY = ( ENABLE = true );"""
+create_stage = """CREATE OR REPLACE STAGE STAGINGAIR DIRECTORY=(ENABLE=true);"""
 
-create_table_query = """CREATE OR REPLACE TABLE incident_reports (
+create_table_query = """CREATE OR REPLACE TABLE incident_reports_airflow (
         incident_datetime TIMESTAMP,
         incident_date TIMESTAMP,
         incident_time STRING,
@@ -41,11 +41,12 @@ create_table_query = """CREATE OR REPLACE TABLE incident_reports (
         point STRING
 );"""
 
-upload_to_stage = """PUT file:///Users/ldy/git/Final-Project-damg/Airflow/files/Incident_Reports.csv @CRIMES.PROD.STAGING;"""
+airflow_path = os.getenv('AIRFLOW_FILES_PATH')
+upload_to_stage = """PUT file:///Users/ldy/git/Final-Project-damg/Airflow/files/Incident_Reports.csv @CRIMES.PROD.STAGINGAIR;"""
+upload_to_stage_airflow = f"""PUT file://{airflow_path}/Incident_Reports.csv @CRIMES.PROD.STAGINGAIR;"""
 
-
-copy_stage_to_table = """COPY INTO CRIMES.PROD.INCIDENT_REPORTS
-        FROM @CRIMES.PROD.STAGING
+copy_stage_to_table = """COPY INTO CRIMES.PROD.incident_reports_airflow
+        FROM @CRIMES.PROD.STAGINGAIR
         FILES = ('Incident_Reports.csv.gz')
         FILE_FORMAT = (
             TYPE=CSV,
@@ -67,7 +68,7 @@ u=os.getenv("SNOWFLAKE_USER")
 p=os.getenv("SNOWFLAKE_PASSWORD")
 ai=os.getenv("SNOWFLAKE_ACCOUNT")
 
-print([u,p,ai])
+# print([u,p,ai])
 
 def upload():
     engine = create_engine(
@@ -98,4 +99,4 @@ def upload():
         connection.close() # type: ignore
         engine.dispose() # type: ignore
 
-# upload()
+upload()

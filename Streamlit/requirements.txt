@@ -2,3 +2,5 @@ streamlit
 snowflake-connector-python[pandas]
 python-dotenv
 OpenAI
+pandas
+leafmap

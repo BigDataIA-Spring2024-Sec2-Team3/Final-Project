@@ -7,7 +7,6 @@ import re
 import requests
 import pandas as pd
 import leafmap.foliumap as leafmap
-import pandas as pd
 from openai import OpenAI
 
 # Load environment variables
@@ -243,7 +242,7 @@ def fetch_crime_data():
     try:
         with st.spinner("Loading"):
             #st.write("In try")
-            response = requests.get("http://fastapi2:8075/snowflake-data")
+            response = requests.get("http://fastapi:8075/snowflake-data")
             data = response.json()['data']
             
             if data:
@@ -319,7 +318,7 @@ elif menu_selection == "Crime Data Map":
         #st.write("Going to def")
         grouped_df = fetch_crime_data()
         # Plotting the data on the map
-        st.map(grouped_df.rename(columns={'latitude': 'lat', 'longitude': 'lon', 'size': 'size'}))
+        st.map(grouped_df.rename(columns={'latitude': 'lat', 'longitude': 'lon', 'size': 'size'})) # type: ignore
         st.markdown("<hr/>", unsafe_allow_html=True)
         if st.button("Log Out"):
             log_out()
@@ -332,7 +331,7 @@ elif menu_selection == "Heat Map":
         st.write(grouped_df)
         m = leafmap.Map(center=[37.763, -122.47], zoom=12.2)
         m.add_heatmap(
-            grouped_df,
+            grouped_df, # type: ignore :not none
             latitude="latitude",
             longitude="longitude",
             value="size",
