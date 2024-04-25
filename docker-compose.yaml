@@ -306,18 +306,18 @@ services:
     env_file:
       - .env
 
-  fastapi2:
-    environment:
-      <<: *airflow-common-env
-    container_name: FastAPI2
-    build: 
-      context: ./FastAPI2
-      dockerfile: ./dockerfile
-    restart: always
-    ports:
-        - "8075:8075"
-    env_file:
-      - .env
+  # fastapi2:
+  #   environment:
+  #     <<: *airflow-common-env
+  #   container_name: FastAPI2
+  #   build: 
+  #     context: ./FastAPI2
+  #     dockerfile: ./dockerfile
+  #   restart: always
+  #   ports:
+  #       - "8075:8075"
+  #   env_file:
+  #     - .env
 
   streamlit:
     environment:
@@ -333,7 +333,7 @@ services:
       - .env
     depends_on:
       - fastapi
-      - fastapi2
+
 
 volumes:
   postgres-db-volume:

@@ -13,7 +13,7 @@ load_dotenv(override= True)
 
 dag = DAG(
     dag_id="handle_pdf_dag",
-    schedule_interval="0 0 * * *",  # Daily at midnight
+    schedule_interval="0 8 * * *",  # Daily at 8 am
     start_date=days_ago(1),
     catchup=False,
     dagrun_timeout=timedelta(minutes=60),
