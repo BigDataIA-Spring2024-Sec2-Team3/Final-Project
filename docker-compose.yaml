@@ -81,8 +81,6 @@ x-airflow-common:
       - ${AIRFLOW_PROJ_DIR:-.}/logs:/opt/airflow/logs
       - ${AIRFLOW_PROJ_DIR:-.}/config:/opt/airflow/config
       - ${AIRFLOW_PROJ_DIR:-.}/plugins:/opt/airflow/dags/plugins
-      - ${AIRFLOW_PROJ_DIR:-.}/utils:/opt/airflow/dags/utils
-      - ${AIRFLOW_PROJ_DIR:-.}/files:/opt/airflow/dags/plugins/files
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
     &airflow-common-depends-on
@@ -261,7 +259,6 @@ services:
       - ${AIRFLOW_PROJ_DIR:-.}/utils:/opt/airflow/dags/utils
       - ${AIRFLOW_PROJ_DIR:-.}/files:/opt/airflow/dags/plugins/files
 
-
   airflow-cli:
     <<: *airflow-common
     profiles:
@@ -296,56 +293,47 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
-  # fastapi:
-  #   environment:
-  #     <<: *airflow-common-env
-  #   container_name: FastAPI
-  #   build: 
-  #     context: ./FastAPI
-  #     dockerfile: ./dockerfile
-  #   restart: always
-  #   ports:
-  #       - "8000:8000"
-  #   env_file:
-  #     - .env
+  fastapi:
+    environment:
+      <<: *airflow-common-env
+    container_name: FastAPI
+    build: 
+      context: ./FastAPI
+      dockerfile: ./dockerfile
+    restart: always
+    ports:
+        - "8000:8000"
+    env_file:
+      - .env
 
-  # fastapi2:
-  #   environment:
-  #     <<: *airflow-common-env
-  #   container_name: FastAPI2
-  #   build: 
-  #     context: ./FastAPI2
-  #     dockerfile: ./dockerfile
-  #   restart: always
-  #   ports:
-  #       - "8075:8075"
-  #   env_file:
-  #     - .env
+  fastapi2:
+    environment:
+      <<: *airflow-common-env
+    container_name: FastAPI2
+    build: 
+      context: ./FastAPI2
+      dockerfile: ./dockerfile
+    restart: always
+    ports:
+        - "8075:8075"
+    env_file:
+      - .env
 
-  # streamlit:
-  #   environment:
-  #     <<: *airflow-common-env
-  #   container_name: Streamlit
-  #   build:
-  #       context: ./Streamlit
-  #       dockerfile: ./dockerfile
-  #   restart: always
-  #   ports:
-  #       - "8503:8503"
-  #   env_file:
-  #     - .env
-  #   depends_on:
-  #     - fastapi
-  #     - fastapi2
-
-  # grobid:
-  #   image: lfoppiano/grobid:0.6.2
-  #   container_name: grobid_image
-  #   init: true
-  #   ulimits:
-  #     core: 0
-  #   ports:
-  #     - "8070:8070"
+  streamlit:
+    environment:
+      <<: *airflow-common-env
+    container_name: Streamlit
+    build:
+        context: ./Streamlit
+        dockerfile: ./dockerfile
+    restart: always
+    ports:
+        - "8503:8503"
+    env_file:
+      - .env
+    depends_on:
+      - fastapi
+      - fastapi2
 
 volumes:
   postgres-db-volume:
