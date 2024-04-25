@@ -6,6 +6,8 @@ import hashlib
 import re
 import requests
 import pandas as pd
+import leafmap.foliumap as leafmap
+import pandas as pd
 
 # Load environment variables
 load_dotenv(override=True)
@@ -144,7 +146,7 @@ def get_subcategories(category):
 
 menu_selection = st.sidebar.radio(
     "Go to:",
-    ("Login", "Sign Up", "Log Incident", "Crime Data Map" , "Log Out")
+    ("Login", "Sign Up", "Log Incident", "Crime Data Map" , "Heat Map","Log Out")
 )
 
 def register_new_user(username, password, full_name, email):
@@ -227,12 +229,12 @@ def fetch_crime_data():
     try:
         with st.spinner("Loading"):
             st.write("In try")
-            response = requests.get("http://fastapi2:8075/snowflake-data")
+            response = requests.get("http://localhost:8000/snowflake-data")
             data = response.json()['data']
             
             if data:
                 # Create a DataFrame with proper column names for latitude and longitude
-                import pandas as pd
+                
                 df = pd.DataFrame(data, columns=['Column0', 'LATITUDE', 'LONGITUDE'])
                 # Convert latitude and longitude from string to float if they are not already
                 df['LATITUDE'] = pd.to_numeric(df['LATITUDE'], errors='coerce')
@@ -248,9 +250,7 @@ def fetch_crime_data():
                 # Adjust the scaling factor as needed to get a suitable bubble size
                 grouped_df['size'] = grouped_df['count'].apply(lambda x: x * 10)  # Scale factor example
 
-                # Plotting the data on the map
-                st.map(grouped_df.rename(columns={'LATITUDE': 'lat', 'LONGITUDE': 'lon', 'size': 'size'}))
-                
+                return grouped_df
             else:
                 st.write("No data available.")
     except Exception as e:
@@ -303,8 +303,27 @@ elif menu_selection == "Crime Data Map":
     if "logged_in" in st.session_state and st.session_state.logged_in:
         st.title("Crime Data Map")
         st.write("Going to def")
-        fetch_crime_data()
+        grouped_df = fetch_crime_data()
+        # Plotting the data on the map
+        st.map(grouped_df.rename(columns={'LATITUDE': 'lat', 'LONGITUDE': 'lon', 'size': 'size'}))
         st.markdown("<hr/>", unsafe_allow_html=True)
+
+elif menu_selection == "Heat Map":
+    st.title('Heatmaps')
+
+    #filepath = "https://raw.githubusercontent.com/giswqs/leafmap/master/examples/data/us_cities.csv"
+    grouped_df = fetch_crime_data()
+    st.write(grouped_df)
+    m = leafmap.Map(center=[37.763, -122.47], zoom=12.2)
+    m.add_heatmap(
+        grouped_df,
+        latitude="LATITUDE",
+        longitude="LONGITUDE",
+        value="size",
+        name="Heat map",
+        radius=20,
+    )
+    m.to_streamlit()
 
 elif menu_selection == "Log Out":
     st.title("Log Out")
