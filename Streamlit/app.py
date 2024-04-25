@@ -8,6 +8,7 @@ import requests
 import pandas as pd
 import leafmap.foliumap as leafmap
 import pandas as pd
+from openai import OpenAI
 
 # Load environment variables
 load_dotenv(override=True)
@@ -18,6 +19,7 @@ snowflake_password = os.getenv("SNOWFLAKE_PASSWORD")
 snowflake_account = os.getenv("SNOWFLAKE_ACCOUNT")
 snowflake_database = os.getenv("SNOWFLAKE_DATABASE")
 snowflake_schema = os.getenv("SNOWFLAKE_SCHEMA")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 # Function to connect to Snowflake
 def connect_to_snowflake():
@@ -146,7 +148,7 @@ def get_subcategories(category):
 
 menu_selection = st.sidebar.radio(
     "Go to:",
-    ("Login", "Sign Up", "Log Incident", "Crime Data Map" , "Heat Map","Log Out")
+    ("Login", "Sign Up", "Log Incident", "Crime Data Map" , "Heat Map","AI Law Help","Log Out")
 )
 
 def register_new_user(username, password, full_name, email):
@@ -324,6 +326,43 @@ elif menu_selection == "Heat Map":
         radius=20,
     )
     m.to_streamlit()
+
+    
+elif menu_selection == "AI Law Help":
+    st.title("AI Law Help")
+    # Set OpenAI API key from Streamlit secrets
+    client = OpenAI(api_key=OPENAI_API_KEY)
+
+    # Set a default model
+    if "openai_model" not in st.session_state:
+        st.session_state["openai_model"] = "gpt-3.5-turbo"
+
+    # Initialize chat history
+    if "messages" not in st.session_state:
+        st.session_state.messages = []
+
+    # Display chat messages from history on app rerun
+    for message in st.session_state.messages:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
+
+    # Accept user input
+    if prompt := st.chat_input("What is up?"):
+        st.session_state.messages.append({"role": "user", "content": prompt})
+        with st.chat_message("user"):
+            st.markdown(prompt)
+
+        with st.chat_message("assistant"):
+            stream = client.chat.completions.create(
+                model=st.session_state["openai_model"],
+                messages=[
+                    {"role": m["role"], "content": m["content"]}
+                    for m in st.session_state.messages
+                ],
+                stream=True,
+            )
+            response = st.write_stream(stream)
+        st.session_state.messages.append({"role": "assistant", "content": response})
 
 elif menu_selection == "Log Out":
     st.title("Log Out")
