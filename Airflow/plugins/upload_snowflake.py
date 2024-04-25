@@ -41,7 +41,7 @@ create_table_query = """CREATE OR REPLACE TABLE incident_reports (
         point STRING
 );"""
 
-upload_to_stage = """PUT file://C:\\Users\\pkala\\AppData\\Local\\Temp\\Incident_Reports.csv @CRIMES.PROD.STAGING;"""
+upload_to_stage = """PUT file:///Users/ldy/git/Final-Project-damg/Airflow/files/Incident_Reports.csv @CRIMES.PROD.STAGING;"""
 
 
 copy_stage_to_table = """COPY INTO CRIMES.PROD.INCIDENT_REPORTS
@@ -79,7 +79,6 @@ def upload():
     )
 
 
-
     try:
         connection = engine.connect()
         connection.execute("USE WAREHOUSE SFCrimes")
@@ -99,4 +98,4 @@ def upload():
         connection.close() # type: ignore
         engine.dispose() # type: ignore
 
-upload()
+# upload()

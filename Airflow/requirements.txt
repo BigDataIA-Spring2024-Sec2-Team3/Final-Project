@@ -1,4 +1,9 @@
-dotenv
 apache-airflow
-plugins
 python-dotenv
+matplotlib
+numpy
+pandas
+pydantic
+bcrypt
+sqlalchemy
+boto3

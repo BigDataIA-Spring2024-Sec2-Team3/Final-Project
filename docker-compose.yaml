@@ -261,6 +261,7 @@ services:
       - ${AIRFLOW_PROJ_DIR:-.}/utils:/opt/airflow/dags/utils
       - ${AIRFLOW_PROJ_DIR:-.}/files:/opt/airflow/dags/plugins/files
 
+
   airflow-cli:
     <<: *airflow-common
     profiles:
