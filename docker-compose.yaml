@@ -293,6 +293,7 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
+
   # fastapi:
   #   environment:
   #     <<: *airflow-common-env
@@ -306,18 +307,18 @@ services:
   #   env_file:
   #     - .env
 
-  fastapi2:
-    environment:
-      <<: *airflow-common-env
-    container_name: FastAPI2
-    build: 
-      context: ./FastAPI2
-      dockerfile: ./dockerfile
-    restart: always
-    ports:
-        - "8075:8075"
-    env_file:
-      - .env
+   fastapi2:
+     environment:
+       <<: *airflow-common-env
+     container_name: FastAPI2
+     build: 
+       context: ./FastAPI2
+       dockerfile: ./dockerfile
+     restart: always
+     ports:
+         - "8075:8075"
+     env_file:
+       - .env
 
   streamlit:
     environment:

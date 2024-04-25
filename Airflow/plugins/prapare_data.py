@@ -8,6 +8,8 @@ import requests
 from pydantic import HttpUrl
 import time, csv, sys, os
 import datetime
+from dotenv import load_dotenv
+load_dotenv(override= True)
 
 def pulldata():
     # Define the URL of the OpenData API endpoint
@@ -65,8 +67,9 @@ def pulldata():
     work_dir = os.getcwd()
     print(work_dir)
     csv_file = "Incident_Reports.csv"
-
-    full_path = os.path.join('/opt/airflow/dags/plugins/files', csv_file)
+    airflow_path = os.getenv('AIRFLOW_FILES_PATH')
+    if airflow_path is not None:
+        full_path = os.path.join(airflow_path, csv_file)
     print(full_path)
     data.to_csv(full_path, index=False)
     
