@@ -1,6 +1,13 @@
-# Final-Project
+# Final-Project: VIGILANT-SF
 
-[![codelabs](https://img.shields.io/badge/codelabs-4285F4?style=for-the-badge&logo=codelabs&logoColor=white)](https://codelabs-preview.appspot.com/?file_id=1xUfakw7LccMhvFhGFg9IFMVMT_t6iD20rxPMDuDIyWA#0)
+[![CODELABS](https://img.shields.io/badge/codelabs-4285F4?style=for-the-badge&logo=codelabs&logoColor=white)](https://codelabs-preview.appspot.com/?file_id=1xUfakw7LccMhvFhGFg9IFMVMT_t6iD20rxPMDuDIyWA#0)
+
+[![APPLICATION]()
+
+
+# OVERVIEW:
+
+VigilantSF is your go-to app for staying safe and informed. Get real-time insights on unsafe areas, interact with our chatbot for quick legal guidance, and empower yourself to make safer choices in your daily life. Say goodbye to lengthy documents—VigilantSF puts safety at your fingertips. Access now and see the difference it can make!
 
 # TECHNOLOGY STACK:
 
