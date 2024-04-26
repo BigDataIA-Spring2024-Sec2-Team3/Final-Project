@@ -6,3 +6,4 @@ pandas
 leafmap
 google-search-results
 requests
+pinecone-client
