@@ -6,6 +6,8 @@ __pycache__/
 
 .DS_store
 
+files/
+Airflow/logs/
 # C extensions
 *.so
 

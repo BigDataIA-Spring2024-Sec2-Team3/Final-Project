@@ -8,8 +8,10 @@ from airflow.utils.dates import days_ago
 from datetime import timedelta
 from plugins.prapare_data import pulldata
 from plugins.upload_snowflake import upload
+from plugins.Law_PDF_Scrapping import scrape_pdf
+from plugins.Pinecone_Upsert import upload_pinecone
+from plugins.download_pdf import download_pdf
 
-load_dotenv(override= True)
 
 dag = DAG(
     dag_id="data_pull_dag",
@@ -22,15 +24,30 @@ dag = DAG(
 
 with dag:
 
-    prepare_data_task = PythonOperator(
-        task_id='prepare_data',
-        execution_timeout=timedelta(minutes=20), # set timeout for the task
-        python_callable=pulldata,
-    )    
+    # prepare_data_task = PythonOperator(
+    #     task_id='prepare_data',
+    #     execution_timeout=timedelta(minutes=20), # set timeout for the task
+    #     python_callable=pulldata,
+    # )    
 
-    upload_snowflkae_task = PythonOperator(
-        task_id='upload',
-        python_callable=upload,
-    )    
+    # upload_snowflkae_task = PythonOperator(
+    #     task_id='Upload_to_snowflake',
+    #     python_callable=upload,
+    # )    
 
-    prepare_data_task >> upload_snowflkae_task # type: ignore
+    download_files_S3_task = PythonOperator(
+        task_id='Download_from_s3' ,
+        python_callable=download_pdf,
+    )
+
+    KB_pdf_scraping_task = PythonOperator(
+        task_id='Knowledge_base_scraping',
+        python_callable=scrape_pdf,
+    )
+
+    upload_KB_task = PythonOperator(
+        task_id='Upload_to_pinecone',
+        python_callable=upload_pinecone
+    )
+
+    download_files_S3_task >> KB_pdf_scraping_task >> upload_KB_task # type: ignore
