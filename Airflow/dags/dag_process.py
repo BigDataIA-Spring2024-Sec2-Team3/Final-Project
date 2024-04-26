@@ -12,12 +12,12 @@ from plugins.upload_snowflake import upload
 load_dotenv(override= True)
 
 dag = DAG(
-    dag_id="handle_pdf_dag",
-    schedule_interval="0 8 * * *",  # Daily at 8 am
+    dag_id="data_pull_dag",
+    schedule_interval="10 10 * * *",  # Daily at 10:10 
     start_date=days_ago(1),
     catchup=False,
     dagrun_timeout=timedelta(minutes=60),
-    tags=["pdf_processing", "s3", "snowflake"],
+    tags=["data processing", "snowflake", "SFdata API"],
 )
 
 with dag:
