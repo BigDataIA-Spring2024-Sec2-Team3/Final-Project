@@ -1,6 +1,9 @@
 import os
 import PyPDF2
 import tabula
+from dotenv import load_dotenv
+
+
 
 def extract_text_and_tables(pdf_path):
     # Initialize lists to store extracted text and tables
@@ -34,20 +37,27 @@ def save_text_to_file(text_content, pdf_name):
             file.write(text)
             file.write('\n\n')
 
-def main():
+def scrape_pdf():
     # Path to the data folder
-    data_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'data'))
+    load_dotenv(override=True)
+    airflow_file_path = os.getenv('AIRFLOW_FILES_PATH')
+    if airflow_file_path is not None:
+        data_folder = airflow_file_path
+        print('datafolde-----:',data_folder)
+        # Iterate over each file in the data folder
+        for filename in os.listdir(data_folder):
+            print('testing-----:',filename)
+            if filename.endswith(".pdf"):
+                pdf_path = os.path.join(data_folder, filename) 
+                print(f"Processing {pdf_path}...")
+                # Extract text and tables from the PDF file
+                text_content, _ = extract_text_and_tables(pdf_path)
+                
+                # Save the extracted text to a text file
+                save_text_to_file(text_content, pdf_path)
+                print(f"Text content saved to {pdf_path.replace('.pdf', '_text.txt')}")
 
-    # Iterate over each file in the data folder
-    for filename in os.listdir(data_folder):
-        if filename.endswith(".pdf"):
-            pdf_path = os.path.join(data_folder, filename)
-            print(f"Processing {pdf_path}...")
-            # Extract text and tables from the PDF file
-            text_content, _ = extract_text_and_tables(pdf_path)
-            
-            # Save the extracted text to a text file
-            save_text_to_file(text_content, pdf_path)
-            print(f"Text content saved to {pdf_path.replace('.pdf', '_text.txt')}")
+            print("All text files saved successfully!")
+    else:
+        print('file doesn\'t exist')
 
-    print("All text files saved successfully!")

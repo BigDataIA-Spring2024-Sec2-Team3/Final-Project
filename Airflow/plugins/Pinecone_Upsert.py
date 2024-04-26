@@ -9,18 +9,6 @@ import time
 from tqdm.auto import tqdm
 from uuid import uuid4
 
-load_dotenv(override=True)
-
-# Initialize Pinecone
-pinecone_api_key = os.getenv('PINECONE_API_KEY')
-pc = Pinecone(api_key=pinecone_api_key)
-index_name = os.getenv('PINECONE_INDEX')
-
-# Initialize OpenAI model
-OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
-model_name = 'text-embedding-ada-002'
-embed = OpenAIEmbeddings(model=model_name, openai_api_key=OPENAI_API_KEY)
-
 # Function to chunk text using RecursiveCharacterTextSplitter
 def chunk_text(text):
     text_splitter = RecursiveCharacterTextSplitter(
@@ -33,9 +21,21 @@ def chunk_text(text):
 
 # Function to read text files and process them
 def read_and_process_text_files(data_folder):
+
+    # Initialize OpenAI model
+    load_dotenv(override=True)
+    OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+    model_name = 'text-embedding-ada-002'
+    embed = OpenAIEmbeddings(
+        model=model_name,
+        openai_api_key=OPENAI_API_KEY  # type: ignore
+    )
+
+
     data = []
     txt_files = glob.glob(os.path.join(data_folder, '*.txt'))
     for i, txt_file in enumerate(txt_files, 1):
+        print('testing:----:', txt_file)
         with open(txt_file, 'r', encoding='utf-8') as file:
             text = file.read()
             # Chunk the text
@@ -55,21 +55,33 @@ def read_and_process_text_files(data_folder):
 
 # Function to upload data to the index in batches
 def upload_data_to_index_in_batches(data, batch_size=100):
-    # Connect to the index
-    index = pc.Index(index_name)
-    # Upsert data into the index in batches
-    for i in range(0, len(data), batch_size):
-        batch = data[i:i+batch_size]
-        index.upsert(vectors=batch, namespace='TextChunks')
 
-def main():
-    data_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'data'))
+    #init pc
+    load_dotenv(override=True)
+    # Initialize Pinecone
+    pinecone_api_key = os.getenv('PINECONE_API_KEY')
+    pc = Pinecone(api_key=pinecone_api_key)
+    index_name = os.getenv('PINECONE_INDEX')
+
+    # Connect to the index
+    if index_name is not None:
+        index = pc.Index(index_name) 
+        print(index.describe_index_stats())
+        print(len(data))
+        # Upsert data into the index in batches
+        for i in range(0, len(data), batch_size):
+            batch = data[i:i+batch_size]
+            index.upsert(vectors=batch, namespace='TextChunks')
+
+def upload_pinecone():
+
+    #init path
+    load_dotenv(override=True)
+    airflow_file_path = os.getenv('AIRFLOW_FILES_PATH')
+    data_folder = airflow_file_path
 
     # Read and process text files
     data = read_and_process_text_files(data_folder)
     # Upload data to the index in batches
     upload_data_to_index_in_batches(data, batch_size=100)
     print("Data uploaded successfully!")
-
-if __name__ == "__main__":
-    main()

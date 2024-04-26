@@ -78,7 +78,7 @@ def upload():
             account_identifier=ai,
         )
     )
-
+    
 
     try:
         connection = engine.connect()
@@ -91,12 +91,13 @@ def upload():
         results = connection.execute(upload_to_stage)
         results = connection.execute(copy_stage_to_table)
 
-    except Exception as e:
-        print(f"Error: {e}")
-        
-    finally:
         print("Done")
         connection.close() # type: ignore
         engine.dispose() # type: ignore
 
-upload()
+    except Exception as e:
+        print(f"Error: {e}")
+        connection.close() # type: ignore
+        engine.dispose() # type: ignore
+
+        
