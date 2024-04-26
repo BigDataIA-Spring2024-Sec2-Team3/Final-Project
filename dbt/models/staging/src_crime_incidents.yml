@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: crime
+    database: crimes
+    schema: prod
+    tables:
+      - name: crime_incidents

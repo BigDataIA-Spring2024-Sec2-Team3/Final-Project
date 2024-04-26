@@ -49,7 +49,7 @@ def ai_law_help():
     # ak = os.getenv("AWS_SK")
 
     st.title("ChatGPT-like clone")
-    FASTAPI_URL= 'http://0.0.0.0:8000/chat/'
+    FASTAPI_URL= 'http://fastapi2:8000/chat/'
     
     # Set a default model
     if "openai_model" not in st.session_state:
@@ -76,7 +76,7 @@ def ai_law_help():
         
             # Get the previous conversation history (including both user and assistant messages)
             history_content = "\n".join([message["content"] for message in st.session_state.messages])
-            st.write(history_content)
+            # st.write(history_content)
         
             # Execute the agent
             try:
@@ -91,7 +91,7 @@ def ai_law_help():
                 if response.status_code == 200:
                     # get response
                     agent_output = response.json()['response']
-                    st.write("Response:", agent_output)
+                    st.write("Response: ", agent_output)
                 else:
                     st.error("Failed to get response from the server")
             
@@ -106,7 +106,3 @@ def ai_law_help():
             # Display agent response in chat message container
             with st.chat_message("assistant"):
                 st.markdown(agent_output)
-
-
-if __name__ == '__main__':
-    ai_law_help()
