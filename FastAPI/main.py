@@ -1,3 +1,4 @@
+## API to get the data
 from fastapi import FastAPI,HTTPException
 from fastapi.responses import JSONResponse
 import snowflake.connector
