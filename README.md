@@ -151,42 +151,77 @@ In urban environments like San Francisco, ensuring personal safety requires not 
 
 # HOW TO RUN THE APPLICATION: 
 
-### Run on GCP
+**Windows**:
 
-1. Clone the git repository on your GCP  terminal.
+1. **Clone the Git Repository**:
+   Open Command Prompt or Git Bash, navigate to the desired directory, and clone the Git repository using the following command:
+   "git clone <repository_url>"
+   
+2. **Add a .env File**:
+   Navigate to the main folder of the project (FINALPROJECT) using File Explorer.
+   Create a new file named .env and open it in a text editor.
+   Add the environment variables following the specified format.
+   
+        SNOWFLAKE_USER=''
+        SNOWFLAKE_PASSWORD=''
+        SNOWFLAKE_ACCOUNT=''
+        SNOWFLAKE_WAREHOUSE =''
+        SNOWFLAKE_DATABASE =''
+        SNOWFLAKE_SCHEMA = ''
+        BUCKET_NAME=''
+        AWS_SK=''
+        AWS_AK='' 
+        PINECONE_API_KEY =''
+        OPENAI_API_KEY='' #include sk-
+        AIRFLOW_UID=
+   
+**3.** **Build Docker Images:**
+Open Windows Subsystem for Linux (WSL) and navigate to the project directory.
+Run the following command to build the Docker images:
+"docker-compose build"
 
-```
-git clone https://github.com/BigDataIA-Spring2024-Sec2-Team3/Final-Project.git
-```
+**4. Run Docker Containers:**
+After the images are built successfully, run the following command to start the Docker containers:
+"docker-compose up"
 
+**5. Access the Application:**
+Once the containers are up and running, open a web browser and navigate to the URL specified for accessing the application.
 
+**macOS:**
 
-2. Add a `.env` file in the main folder -> Final_project.
+**1. Clone the Git Repository:**
+Open Terminal, navigate to the desired directory, and clone the Git repository using the following command:
+"git clone <repository_url>"
 
-FOLLOW THE FORMAT BELOW:
+**2. Add a .env File:**
+Navigate to the main folder of the project (FINALPROJECT) using Finder. 
+Create a new file named .env and open it in a text editor. Add the environment variables following the specified format.
 
-```
- SNOWFLAKE_USER=''
- SNOWFLAKE_PASSWORD=''
- SNOWFLAKE_ACCOUNT=''
- SNOWFLAKE_WAREHOUSE =''
- SNOWFLAKE_DATABASE =''
- SNOWFLAKE_SCHEMA = ''
- BUCKET_NAME=''
- AWS_SK=''
- AWS_AK='' 
- PINECONE_API_KEY =''
- OPENAI_API_KEY='' #include sk-
- AIRFLOW_UID=
-```
+        SNOWFLAKE_USER=''
+        SNOWFLAKE_PASSWORD=''
+        SNOWFLAKE_ACCOUNT=''
+        SNOWFLAKE_WAREHOUSE =''
+        SNOWFLAKE_DATABASE =''
+        SNOWFLAKE_SCHEMA = ''
+        BUCKET_NAME=''
+        AWS_SK=''
+        AWS_AK='' 
+        PINECONE_API_KEY =''
+        OPENAI_API_KEY='' #include sk-
+        AIRFLOW_UID=
+        
+**3. Build Docker Images:**
+Open Terminal and navigate to the project directory. 
+Run the following command to build the Docker images:
+"docker-compose build"
 
+**4. Run Docker Containers:**
+After the images are built successfully, run the following command to start the Docker containers:
+"docker-compose up"
 
-
-3. In the terminal of GCP  run `make up`
-
-4. Open the Streamlit service with links.[![APPLICATION](https://camo.githubusercontent.com/9a944119b0e3fd4786e3ece479d92267a043b3f238101dfa13ceee104956742d/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f2d4170706c69636174696f6e2d79656c6c6f773f7374796c653d666f722d7468652d6261646765)](http://35.199.47.65:8503/)
-
-
+**5. Access the Application:**
+Once the containers are up and running, open a web browser and navigate to the URL specified for accessing the application.
+Ensure that you have Docker Desktop installed on both Windows and macOS before proceeding with these steps. Adjustments to file navigation and commands may be needed based on your specific environment setup.
 
 # CONTRIBUTION
 
