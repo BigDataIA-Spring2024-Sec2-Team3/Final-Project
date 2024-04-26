@@ -7,9 +7,16 @@
 
 VigilantSF is your go-to app for staying safe and informed. Get real-time insights on unsafe areas, interact with our chatbot for quick legal guidance, and empower yourself to make safer choices in your daily life. Say goodbye to lengthy documents—VigilantSF puts safety at your fingertips. Access now and see the difference it can make!
 
-# PROBLEM STATEMENT
+# PROBLEM STATEMENT:
 
 In urban environments like San Francisco, ensuring personal safety requires not only awareness of potential threats but also a deep understanding of applicable laws in various situations. However, navigating through dense legal documents and understanding complex legal terminology can be daunting for the average citizen. Moreover, there is often a lack of easily accessible resources to provide guidance on non-emergency legal matters, leading to unnecessary strain on emergency response systems.
+
+# PROJECT GOALS:
+
+**Enhance Personal Safety**: Develop a platform to empower individuals with the knowledge and resources necessary to make informed decisions about their personal safety in urban environments, particularly in areas like San Francisco.
+**Simplify Legal Understanding**: Provide users with easy access to understandable explanations of applicable laws and regulations in various everyday situations, thereby demystifying complex legal terminology and documents.
+**Reduce Strain on Emergency Services**: Offer guidance on non-emergency legal matters to alleviate unnecessary burdens on emergency response systems, ensuring that resources are available for genuine emergencies.
+**Increase Community Awareness**: Foster a sense of community awareness by promoting knowledge-sharing and collaboration among users to create a safer environment for everyone.
 
 # TECHNOLOGY STACK:
 
@@ -29,6 +36,15 @@ In urban environments like San Francisco, ensuring personal safety requires not 
 ![TABULA-PY](https://camo.githubusercontent.com/bb9d9a0061b0538b9ebfa5c5a50e0d03fe4d59f316d6a7d94f4bd2dd1f477119/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f50696e65636f6e652d3843353446463f7374796c653d666f722d7468652d6261646765266c6f676f3d70696e65636f6e65266c6f676f436f6c6f723d7768697465)
 ![PYTEST](https://camo.githubusercontent.com/e57aa62d1c0d72a5d602b2eeba5bf2bc231221a7f0cafba573f6fb51ae6a5c5e/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f7079746573742d3041394544433f7374796c653d666f722d7468652d6261646765266c6f676f3d707974686f6e266c6f676f436f6c6f723d7768697465)
 ![NUMPY](https://camo.githubusercontent.com/9a944119b0e3fd4786e3ece479d92267a043b3f238101dfa13ceee104956742d/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f2d4170706c69636174696f6e2d79656c6c6f773f7374796c653d666f722d7468652d6261646765)
+
+# LEARNING OUTCOMES:
+
+**Legal Knowledge**: Gain a deeper understanding of applicable laws and regulations in urban environments, particularly those relevant to personal safety and non-emergency situations.
+**Technical Skills**: Develop proficiency in building a user-friendly platform, integrating legal guidance features, and implementing interactive elements for user engagement.
+**Problem-Solving**: Enhance problem-solving skills by addressing the challenge of simplifying complex legal concepts and making them accessible to a wide audience.
+Community Engagement: Learn the importance of community engagement in promoting safety and well-being, and how technology can facilitate collaboration and information-sharing among community members.
+**Ethical Considerations**: Understand the ethical implications of providing legal guidance through a technological platform and the responsibility to ensure accuracy and fairness in information dissemination.
+**Impact Assessment**: Evaluate the impact of the project on community safety and emergency response systems, and identify areas for improvement and further development based on user feedback and data analysis.
 
 
 # FOLDER STRUCTURE:
