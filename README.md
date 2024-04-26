@@ -1,4 +1,4 @@
-# Final-Project: VIGILANT-SF
+# VIGILANT-SF - Your Safety Companion
 
 [![CODELABS](https://img.shields.io/badge/codelabs-4285F4?style=for-the-badge&logo=codelabs&logoColor=white)](https://codelabs-preview.appspot.com/?file_id=1xUfakw7LccMhvFhGFg9IFMVMT_t6iD20rxPMDuDIyWA#0)
 [![APPLICATION](https://camo.githubusercontent.com/9a944119b0e3fd4786e3ece479d92267a043b3f238101dfa13ceee104956742d/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f2d4170706c69636174696f6e2d79656c6c6f773f7374796c653d666f722d7468652d6261646765)](http://35.199.47.65:8503/)
@@ -6,6 +6,10 @@
 # OVERVIEW:
 
 VigilantSF is your go-to app for staying safe and informed. Get real-time insights on unsafe areas, interact with our chatbot for quick legal guidance, and empower yourself to make safer choices in your daily life. Say goodbye to lengthy documents—VigilantSF puts safety at your fingertips. Access now and see the difference it can make!
+
+# PROBLEM STATEMENT
+
+In urban environments like San Francisco, ensuring personal safety requires not only awareness of potential threats but also a deep understanding of applicable laws in various situations. However, navigating through dense legal documents and understanding complex legal terminology can be daunting for the average citizen. Moreover, there is often a lack of easily accessible resources to provide guidance on non-emergency legal matters, leading to unnecessary strain on emergency response systems.
 
 # TECHNOLOGY STACK:
 
