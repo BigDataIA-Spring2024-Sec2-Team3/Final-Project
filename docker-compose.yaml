@@ -293,31 +293,32 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
-  fastapi:
-    environment:
-      <<: *airflow-common-env
-    container_name: FastAPI
-    build: 
-      context: ./FastAPI
-      dockerfile: ./dockerfile
-    restart: always
-    ports:
-        - "8075:8075"
-    env_file:
-      - .env
 
-  # fastapi2:
+  # fastapi:
   #   environment:
   #     <<: *airflow-common-env
-  #   container_name: FastAPI2
+  #   container_name: FastAPI
   #   build: 
-  #     context: ./FastAPI2
+  #     context: ./FastAPI
   #     dockerfile: ./dockerfile
   #   restart: always
   #   ports:
-  #       - "8075:8075"
+  #       - "8000:8000"
   #   env_file:
   #     - .env
+
+   fastapi2:
+     environment:
+       <<: *airflow-common-env
+     container_name: FastAPI2
+     build: 
+       context: ./FastAPI2
+       dockerfile: ./dockerfile
+     restart: always
+     ports:
+         - "8075:8075"
+     env_file:
+       - .env
 
   streamlit:
     environment:
@@ -332,8 +333,8 @@ services:
     env_file:
       - .env
     depends_on:
-      - fastapi
-
+      # - fastapi
+      - fastapi2
 
 volumes:
   postgres-db-volume:
