@@ -81,34 +81,6 @@ def validate_user_credentials(username, password):
             conn.close()
     return False, None, None
 
-# @st.cache_data
-def fetch_crime_data(input_str):
-    try:
-        with st.spinner("Loading"):
-
-            if input_str == 'Past Week':
-                table = 'MAIN_MAP_LASTWEEK_MODEL'
-            elif input_str == 'Past Month':
-                table = 'MAIN_MAP_LASTMONTH_MODEL'
-            elif input_str == 'Past Year':
-                table = 'MAIN_MAP_LASTYEAR_MODEL'
-            elif input_str == 'All Data':
-                table = 'MAIN_MAP_ALL_MODEL'
-            link = f"http://fastapi:8075/snowflake-heatmap-data/?table={table}"
-            response = requests.get(link)
-            data = response.json()['data']
-            
-            if data:
-                df = pd.DataFrame(data, columns=['Column0','latitude', 'longitude'])
-                df['latitude'] = pd.to_numeric(df['latitude'], errors='coerce')
-                df['longitude'] = pd.to_numeric(df['longitude'], errors='coerce')
-                df['Column0'] = df['Column0'].apply(lambda x: x * 10)  # Scale factor example
-                return df
-            else:
-                st.write("No data available.")
-    except Exception as e:
-        st.error(f"An error occurred while fetching crime data: {e}")
-
 @st.cache_data
 def fetch_heatmap_crime_data(input_str):
     try:
@@ -138,15 +110,13 @@ def fetch_heatmap_crime_data(input_str):
                 unique_elements = df['Column0'].unique()
 
 
-                correct_order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-                correct_order = ['Morning','Afternoon','Evening','Late Night']
+                correct_order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday','Morning','Afternoon','Evening','Late Night']
                 if input_str in [ 'Days of Week', 'Time of Day','Holidays'] :
                     unique_elements = pd.Categorical(unique_elements, categories=correct_order, ordered=True)
                     unique_elements = unique_elements.sort_values()
                 if input_str == 'Year':
                     unique_elements.sort()
 
-                # df=df[df['Crimes']>=15]
                 df['size'] = df['Crimes'].apply(lambda x: x * 10)  # Scale factor example
                 return df,unique_elements
             else:

@@ -2,7 +2,6 @@ import streamlit as st
 from plugins.registration_login import show_registration_login, log_out
 # import plugins.ai_law_help as ai_law_help
 from plugins.heat_map import heat_map
-from plugins.crime_data_map import crime_data_map 
 from plugins.dashboard import fetch_data, dashboard
 import os
 
@@ -28,7 +27,7 @@ else:
     # Menu selection
     menu_selection = st.sidebar.radio(
     "Go to:",
-    ("Crime Dashboard","Crime Data Map", "Heat Map", "AI Law Help"))
+    ("Crime Dashboard", "Heat Map", "AI Law Help"))
 
     # Add logout button at the bottom of the sidebar
     if st.sidebar.button("Log Out", key="logout_button"):
@@ -39,10 +38,7 @@ else:
             dashboard()
 
         # Menu options
-    if menu_selection == "Crime Data Map":
-        crime_data_map()
-
-    elif menu_selection == "Heat Map":
+    if menu_selection == "Heat Map":
         heat_map()
         
     # elif menu_selection == "AI Law Help":
