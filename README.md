@@ -118,20 +118,21 @@
 
 1. CLONE THE GIT REPOSITORY
 2. ADD A .ENV FILE IN THE MAIN FOLDER -> FINALPROJECT.
+   
    FOLLOW THE FORMAT BELOW:
+   
         SNOWFLAKE_USER=''
         SNOWFLAKE_PASSWORD=''
         SNOWFLAKE_ACCOUNT=''
         SNOWFLAKE_WAREHOUSE =''
         SNOWFLAKE_DATABASE =''
         SNOWFLAKE_SCHEMA = ''
-        
         BUCKET_NAME=''
         AWS_SK=''
         AWS_AK='' 
         PINECONE_API_KEY =''
         OPENAI_API_KEY='' #include sk-
         AIRFLOW_UID=
-3. 
+4. 
 
 
