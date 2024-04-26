@@ -1,8 +1,11 @@
 streamlit
+pandas
 snowflake-connector-python[pandas]
 python-dotenv
 OpenAI
-pandas
 leafmap
 google-search-results
 requests
+pinecone-client
+altair
+plotly

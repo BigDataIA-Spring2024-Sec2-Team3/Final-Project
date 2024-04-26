@@ -6,7 +6,7 @@ import re
 import streamlit as st
 import pandas as pd
 import requests 
-import base64
+
 
 load_dotenv(override=True)
 
@@ -94,7 +94,7 @@ def fetch_crime_data(input_str):
                 table = 'MAIN_MAP_LASTYEAR_MODEL'
             elif input_str == 'All Data':
                 table = 'MAIN_MAP_ALL_MODEL'
-            link = f"http://localhost:8000/snowflake-heatmap-data/?table={table}"
+            link = f"http://fastapi:8075/snowflake-heatmap-data/?table={table}"
             response = requests.get(link)
             data = response.json()['data']
             
@@ -124,7 +124,7 @@ def fetch_heatmap_crime_data(input_str):
                 table = 'HEATMAP_YEARLY'
             elif input_str == 'Category':
                 table = 'HEATMAP_CAT'
-            link = f"http://localhost:8000/snowflake-heatmap-data/?table={table}"
+            link = f"http://fastapi:8075/snowflake-heatmap-data/?table={table}"
 
             response = requests.get(link)
             data = response.json()['data']
