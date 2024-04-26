@@ -1,0 +1,30 @@
+version: 2
+
+models:
+  - name: stg_incidents
+    columns: 
+      - name: incident_datetime
+        tests:
+          - not_null
+      - name: incident_date
+        tests:
+          - not_null
+      - name: incident_time
+        tests:
+          - not_null
+      - name: incident_year
+        tests:
+          - not_null
+      - name: incident_day_of_week
+        tests:
+          - not_null
+      - name: row_id
+        tests:
+          - not_null
+          - unique
+      - name: incident_id
+        tests:
+          - not_null
+      - name: incident_number
+        tests:
+          - not_null
