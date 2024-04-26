@@ -2,6 +2,10 @@ import datetime
 import json
 import openai
 import os
+import datetime
+import json
+import openai
+import os
 from dotenv import load_dotenv
 import pandas as pd
 from pinecone import Pinecone, ServerlessSpec
