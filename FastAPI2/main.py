@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 from langchain.agents import Tool, AgentExecutor, LLMSingleActionAgent, AgentOutputParser
 from langchain.prompts import BaseChatPromptTemplate
 from langchain import LLMChain, SerpAPIWrapper
-from langchain_community.chat_models import ChatOpenAI
+from langchain_community.chat_models import ChatOpenAI # type: ignore
 from langchain_community.llms import OpenAI
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.memory import ConversationBufferWindowMemory
@@ -178,6 +178,3 @@ async def chat(request: ChatRequest):
     agent_output = agent_executor.run(input=request.user_input, history=request.history)
     return {"response": agent_output}
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)

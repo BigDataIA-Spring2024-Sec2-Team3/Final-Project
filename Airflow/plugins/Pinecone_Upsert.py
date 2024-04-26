@@ -7,7 +7,7 @@ import hashlib
 import glob
 import time
 from tqdm.auto import tqdm
-from uuid import uuid4
+
 
 # Function to chunk text using RecursiveCharacterTextSplitter
 def chunk_text(text):

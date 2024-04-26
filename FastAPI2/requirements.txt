@@ -4,4 +4,8 @@ fastapi
 python-dotenv
 google-search-results
 langchain-community
-langchain_pinecone
+langchain-pinecone
+langchain
+pinecone-client
+openai
+langchain-openai
