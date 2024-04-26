@@ -7,17 +7,6 @@
 
 VigilantSF is your go-to app for staying safe and informed. Get real-time insights on unsafe areas, interact with our chatbot for quick legal guidance, and empower yourself to make safer choices in your daily life. Say goodbye to lengthy documents—VigilantSF puts safety at your fingertips. Access now and see the difference it can make!
 
-# PROBLEM STATEMENT:
-
-In urban environments like San Francisco, ensuring personal safety requires not only awareness of potential threats but also a deep understanding of applicable laws in various situations. However, navigating through dense legal documents and understanding complex legal terminology can be daunting for the average citizen. Moreover, there is often a lack of easily accessible resources to provide guidance on non-emergency legal matters, leading to unnecessary strain on emergency response systems.
-
-# PROJECT GOALS:
-
-**Enhance Personal Safety**: Develop a platform to empower individuals with the knowledge and resources necessary to make informed decisions about their personal safety in urban environments, particularly in areas like San Francisco.
-**Simplify Legal Understanding**: Provide users with easy access to understandable explanations of applicable laws and regulations in various everyday situations, thereby demystifying complex legal terminology and documents.
-**Reduce Strain on Emergency Services**: Offer guidance on non-emergency legal matters to alleviate unnecessary burdens on emergency response systems, ensuring that resources are available for genuine emergencies.
-**Increase Community Awareness**: Foster a sense of community awareness by promoting knowledge-sharing and collaboration among users to create a safer environment for everyone.
-
 # TECHNOLOGY STACK:
 
 ![STREAMLIT](https://camo.githubusercontent.com/121d8055ce25931b33557341b1397ec6721dca05b7f07978cbf3c9b9f4509b13/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f53747265616d6c69742d4646344234423f7374796c653d666f722d7468652d6261646765266c6f676f3d73747265616d6c6974266c6f676f436f6c6f723d7768697465)
@@ -34,6 +23,17 @@ In urban environments like San Francisco, ensuring personal safety requires not 
 ![PANDAS](https://camo.githubusercontent.com/a38f77f5b33450d816dc95e4ac3f2fd9aad080d2bb6b4c54c85a79fcf3b8f8f8/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f50616e6461732d3135303435383f7374796c653d666f722d7468652d6261646765266c6f676f3d70616e646173266c6f676f436f6c6f723d7768697465)
 ![SERPAPI](https://camo.githubusercontent.com/72ee93b3dc82a515dbac86bc8221489f93cb28c565c5b8565de6179d9860d30e/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f534552505f4150492d3030393638383f7374796c653d666f722d7468652d6261646765266c6f676f3d676f6f676c65266c6f676f436f6c6f723d7768697465)
 ![PYTEST](https://camo.githubusercontent.com/e57aa62d1c0d72a5d602b2eeba5bf2bc231221a7f0cafba573f6fb51ae6a5c5e/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f7079746573742d3041394544433f7374796c653d666f722d7468652d6261646765266c6f676f3d707974686f6e266c6f676f436f6c6f723d7768697465)
+
+# PROBLEM STATEMENT:
+
+In urban environments like San Francisco, ensuring personal safety requires not only awareness of potential threats but also a deep understanding of applicable laws in various situations. However, navigating through dense legal documents and understanding complex legal terminology can be daunting for the average citizen. Moreover, there is often a lack of easily accessible resources to provide guidance on non-emergency legal matters, leading to unnecessary strain on emergency response systems.
+
+# PROJECT GOALS:
+
+**Enhance Personal Safety**: Develop a platform to empower individuals with the knowledge and resources necessary to make informed decisions about their personal safety in urban environments, particularly in areas like San Francisco.
+**Simplify Legal Understanding**: Provide users with easy access to understandable explanations of applicable laws and regulations in various everyday situations, thereby demystifying complex legal terminology and documents.
+**Reduce Strain on Emergency Services**: Offer guidance on non-emergency legal matters to alleviate unnecessary burdens on emergency response systems, ensuring that resources are available for genuine emergencies.
+**Increase Community Awareness**: Foster a sense of community awareness by promoting knowledge-sharing and collaboration among users to create a safer environment for everyone.
 
 # LEARNING OUTCOMES:
 
