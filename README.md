@@ -133,6 +133,19 @@
         PINECONE_API_KEY =''
         OPENAI_API_KEY='' #include sk-
         AIRFLOW_UID=
-4. 
+4. OPEN WSL AND RUN 'docker-compose build'
+5. RUN 'docker-compose up'
+6. NAVIGATE TO ''
+7. SIGN UP WITH YOUR CREDENTIALS
+
+# CONTRIBUTION
+NAME	PERCENTAGE
+| NAME  | CONTRIBUTION |
+| ------------- | ------------- |
+| DONGYU LIU  | 33.3% |
+| SUMIT SHARMA  | 33.3%  |
+| EKTA BHATIA  | 33.3% |
+| PARTH KALANI  | 33.3%  |
+
 
 
