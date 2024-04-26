@@ -9,3 +9,4 @@ requests
 pinecone-client
 altair
 plotly
+boto3

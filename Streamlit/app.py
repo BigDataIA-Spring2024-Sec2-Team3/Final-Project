@@ -1,6 +1,6 @@
 import streamlit as st
 from plugins.registration_login import show_registration_login, log_out
-# import plugins.ai_law_help as ai_law_help
+from plugins.ai_law_help import ai_law_help
 from plugins.heat_map import heat_map
 from plugins.dashboard import fetch_data, dashboard
 import os
@@ -41,8 +41,8 @@ else:
     if menu_selection == "Heat Map":
         heat_map()
         
-    # elif menu_selection == "AI Law Help":
-    #     ai_law_help
+    elif menu_selection == "AI Law Help":
+        ai_law_help()
 
 # Add custom CSS for dark theme and serif font
 st.markdown(
