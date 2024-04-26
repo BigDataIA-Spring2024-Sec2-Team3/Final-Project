@@ -151,27 +151,42 @@ In urban environments like San Francisco, ensuring personal safety requires not 
 
 # HOW TO RUN THE APPLICATION: 
 
-1. CLONE THE GIT REPOSITORY
-2. ADD A .ENV FILE IN THE MAIN FOLDER -> FINALPROJECT.
-   
-   FOLLOW THE FORMAT BELOW:
-   
-        SNOWFLAKE_USER=''
-        SNOWFLAKE_PASSWORD=''
-        SNOWFLAKE_ACCOUNT=''
-        SNOWFLAKE_WAREHOUSE =''
-        SNOWFLAKE_DATABASE =''
-        SNOWFLAKE_SCHEMA = ''
-        BUCKET_NAME=''
-        AWS_SK=''
-        AWS_AK='' 
-        PINECONE_API_KEY =''
-        OPENAI_API_KEY='' #include sk-
-        AIRFLOW_UID=
-4. OPEN WSL AND RUN 'docker-compose build'
-5. RUN 'docker-compose up'
-6. NAVIGATE TO ''
-7. SIGN UP WITH YOUR CREDENTIALS
+### Run on GCP
+
+1. Clone the git repository on your GCP  terminal.
+
+```
+git clone https://github.com/BigDataIA-Spring2024-Sec2-Team3/Final-Project.git
+```
+
+
+
+2. Add a `.env` file in the main folder -> Final_project.
+
+FOLLOW THE FORMAT BELOW:
+
+```
+ SNOWFLAKE_USER=''
+ SNOWFLAKE_PASSWORD=''
+ SNOWFLAKE_ACCOUNT=''
+ SNOWFLAKE_WAREHOUSE =''
+ SNOWFLAKE_DATABASE =''
+ SNOWFLAKE_SCHEMA = ''
+ BUCKET_NAME=''
+ AWS_SK=''
+ AWS_AK='' 
+ PINECONE_API_KEY =''
+ OPENAI_API_KEY='' #include sk-
+ AIRFLOW_UID=
+```
+
+
+
+3. In the terminal of GCP  run `make up`
+
+4. Open the Streamlit service with links.[![APPLICATION](https://camo.githubusercontent.com/9a944119b0e3fd4786e3ece479d92267a043b3f238101dfa13ceee104956742d/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f2d4170706c69636174696f6e2d79656c6c6f773f7374796c653d666f722d7468652d6261646765)](http://35.199.47.65:8503/)
+
+
 
 # CONTRIBUTION
 
