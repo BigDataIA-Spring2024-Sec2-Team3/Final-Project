@@ -25,50 +25,50 @@ def fetch_data(years=None):
         database=snowflake_database,
         schema=snowflake_schema
     )
-    if years is None:
+    # if years is None:
         # No years selected, fetch data for all years
-        sql_query = """
-        SELECT
-            INCIDENT_DATETIME,
-            INCIDENT_DATE,
-            INCIDENT_TIME,
-            INCIDENT_YEAR,
-            INCIDENT_DAY_OF_WEEK,
-            REPORT_DATETIME,
-            INCIDENT_ID,
-            INCIDENT_NUMBER,
-            INCIDENT_CATEGORY,
-            INCIDENT_SUBCATEGORY,
-            INCIDENT_DESCRIPTION,
-            RESOLUTION,
-            POLICE_DISTRICT,
-            ANALYSIS_NEIGHBORHOOD
-        FROM INCIDENT_REPORTS
-        """
-    else:
-        # Convert years list to a comma-separated string
-        years_str = ', '.join([str(year) for year in years])
+    sql_query = """
+    SELECT
+        INCIDENT_DATETIME,
+        INCIDENT_DATE,
+        INCIDENT_TIME,
+        INCIDENT_YEAR,
+        INCIDENT_DAY_OF_WEEK,
+        REPORT_DATETIME,
+        INCIDENT_ID,
+        INCIDENT_NUMBER,
+        INCIDENT_CATEGORY,
+        INCIDENT_SUBCATEGORY,
+        INCIDENT_DESCRIPTION,
+        RESOLUTION,
+        POLICE_DISTRICT,
+        ANALYSIS_NEIGHBORHOOD
+    FROM INCIDENT_REPORTS
+    """
+    # else:
+    #     # Convert years list to a comma-separated string
+    #     years_str = ', '.join([str(year) for year in years])
 
-        # SQL query to fetch incident data for selected years
-        sql_query = f"""
-        SELECT
-            INCIDENT_DATETIME,
-            INCIDENT_DATE,
-            INCIDENT_TIME,
-            INCIDENT_YEAR,
-            INCIDENT_DAY_OF_WEEK,
-            REPORT_DATETIME,
-            INCIDENT_ID,
-            INCIDENT_NUMBER,
-            INCIDENT_CATEGORY,
-            INCIDENT_SUBCATEGORY,
-            INCIDENT_DESCRIPTION,
-            RESOLUTION,
-            POLICE_DISTRICT,
-            ANALYSIS_NEIGHBORHOOD
-        FROM INCIDENT_REPORTS
-        WHERE INCIDENT_YEAR IN ({years_str})
-        """
+    #     # SQL query to fetch incident data for selected years
+    #     sql_query = f"""
+    #     SELECT
+    #         INCIDENT_DATETIME,
+    #         INCIDENT_DATE,
+    #         INCIDENT_TIME,
+    #         INCIDENT_YEAR,
+    #         INCIDENT_DAY_OF_WEEK,
+    #         REPORT_DATETIME,
+    #         INCIDENT_ID,
+    #         INCIDENT_NUMBER,
+    #         INCIDENT_CATEGORY,
+    #         INCIDENT_SUBCATEGORY,
+    #         INCIDENT_DESCRIPTION,
+    #         RESOLUTION,
+    #         POLICE_DISTRICT,
+    #         ANALYSIS_NEIGHBORHOOD
+    #     FROM INCIDENT_REPORTS
+    #     WHERE INCIDENT_YEAR IN ({years_str})
+        # """
 
     # Execute query and fetch data into a DataFrame
     df = pd.read_sql(sql_query, conn)
@@ -83,29 +83,18 @@ def dashboard():
     st.title('Crime Dashboard')
     # Sidebar filters
     st.sidebar.header('Filters')
-    years = range(2018, 2024)
-    selected_years = st.sidebar.multiselect('Select Year', years, default=years)
+    selected_years = st.sidebar.multiselect('Select Year', sorted(df['INCIDENT_YEAR'].unique()), default=sorted(df['INCIDENT_YEAR'].unique()))
     selected_day_of_week = st.sidebar.multiselect('Select Day of Week', sorted(df['INCIDENT_DAY_OF_WEEK'].unique()), default=sorted(df['INCIDENT_DAY_OF_WEEK'].unique()))
-    #selected_location = st.sidebar.multiselect('Select Location', sorted(filtered_neighborhoods.unique()), default=sorted(filtered_neighborhoods.unique()))
     selected_report_status = st.sidebar.multiselect('Select Report Status', df['RESOLUTION'].unique(), default=df['RESOLUTION'].unique())
-
-    # Add police district filter
     selected_police_district = st.sidebar.multiselect('Select Police District', sorted(df['POLICE_DISTRICT'].unique()), default=sorted(df['POLICE_DISTRICT'].unique()))
-
-    # Add month filter
-    # Extract month from INCIDENT_DATETIME and convert it to string
-    df['Year-Month'] = pd.to_datetime(df['INCIDENT_DATETIME']).dt.to_period('M').astype(str)
-    #selected_month = st.sidebar.multiselect('Select Month', sorted(df['Year-Month'].unique()), default=sorted(df['Year-Month'].unique()))
-
     
     # Apply filters
-    filtered_df = df[(df['INCIDENT_YEAR'].isin(selected_years)) &
-                     (df['INCIDENT_DAY_OF_WEEK'].isin(selected_day_of_week)) &
-                    # (df['ANALYSIS_NEIGHBORHOOD'].isin(selected_location)) &
-                     (df['RESOLUTION'].isin(selected_report_status)) &
-                     (df['POLICE_DISTRICT'].isin(selected_police_district)) 
-                    # (df['Year-Month'].isin(selected_month))
-                    ]
+    filtered_df = df[df['INCIDENT_YEAR'].isin(selected_years) &
+                    df['INCIDENT_DAY_OF_WEEK'].isin(selected_day_of_week)&
+                    (df['RESOLUTION'].isin(selected_report_status)) &
+                    (df['POLICE_DISTRICT'].isin(selected_police_district))]
+                    
+    st.write(filtered_df)
 
     # Data visualization
     st.header('Data Visualization')
