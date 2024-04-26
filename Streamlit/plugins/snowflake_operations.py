@@ -6,7 +6,7 @@ import re
 import streamlit as st
 import pandas as pd
 import requests 
-
+import base64
 
 load_dotenv(override=True)
 
@@ -81,25 +81,74 @@ def validate_user_credentials(username, password):
             conn.close()
     return False, None, None
 
-def fetch_crime_data():
+# @st.cache_data
+def fetch_crime_data(input_str):
     try:
         with st.spinner("Loading"):
-            response = requests.get("http://fastapi2:8075/snowflake-data")
+
+            if input_str == 'Past Week':
+                table = 'MAIN_MAP_LASTWEEK_MODEL'
+            elif input_str == 'Past Month':
+                table = 'MAIN_MAP_LASTMONTH_MODEL'
+            elif input_str == 'Past Year':
+                table = 'MAIN_MAP_LASTYEAR_MODEL'
+            elif input_str == 'All Data':
+                table = 'MAIN_MAP_ALL_MODEL'
+            link = f"http://localhost:8000/snowflake-heatmap-data/?table={table}"
+            response = requests.get(link)
             data = response.json()['data']
             
             if data:
-                df = pd.DataFrame(data, columns=['Column0','latitude', 'longitude', 'year'])
+                df = pd.DataFrame(data, columns=['Column0','latitude', 'longitude'])
+                df['latitude'] = pd.to_numeric(df['latitude'], errors='coerce')
+                df['longitude'] = pd.to_numeric(df['longitude'], errors='coerce')
+                df['Column0'] = df['Column0'].apply(lambda x: x * 10)  # Scale factor example
+                return df
+            else:
+                st.write("No data available.")
+    except Exception as e:
+        st.error(f"An error occurred while fetching crime data: {e}")
+
+@st.cache_data
+def fetch_heatmap_crime_data(input_str):
+    try:
+        with st.spinner("Loading"):
+
+            if input_str == 'Days of Week':
+                table = 'HEATMAP_DOW'
+            elif input_str == 'Time of Day':
+                table = 'HEATMAP_TOD_GAP'
+            elif input_str == 'Holidays':
+                table = 'HEATMAP_PUBLICHOLIDAYS'
+            elif input_str == 'Year':
+                table = 'HEATMAP_YEARLY'
+            elif input_str == 'Category':
+                table = 'HEATMAP_CAT'
+            link = f"http://localhost:8000/snowflake-heatmap-data/?table={table}"
+
+            response = requests.get(link)
+            data = response.json()['data']
+            
+            if data:
+                df = pd.DataFrame(data, columns=['Column0','Crimes','latitude', 'longitude'])
                 df['latitude'] = pd.to_numeric(df['latitude'], errors='coerce')
                 df['longitude'] = pd.to_numeric(df['longitude'], errors='coerce')
 
-                grouped_df = df.groupby(by=['latitude', 'longitude']).size().reset_index(name='count') #type: ignore 
+                # grouped_df = df.groupby(by=['latitude', 'longitude']).size().reset_index(name='count') #type: ignore 
+                unique_elements = df['Column0'].unique()
 
-                # st.write("Aggregated Locations with Count:")
-                # st.write(grouped_df.head())
 
-                grouped_df['size'] = grouped_df['count'].apply(lambda x: x * 10)  # Scale factor example
+                correct_order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+                correct_order = ['Morning','Afternoon','Evening','Late Night']
+                if input_str in [ 'Days of Week', 'Time of Day','Holidays'] :
+                    unique_elements = pd.Categorical(unique_elements, categories=correct_order, ordered=True)
+                    unique_elements = unique_elements.sort_values()
+                if input_str == 'Year':
+                    unique_elements.sort()
 
-                return grouped_df
+                # df=df[df['Crimes']>=15]
+                df['size'] = df['Crimes'].apply(lambda x: x * 10)  # Scale factor example
+                return df,unique_elements
             else:
                 st.write("No data available.")
     except Exception as e:

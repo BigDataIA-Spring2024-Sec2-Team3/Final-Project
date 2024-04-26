@@ -73,5 +73,3 @@ def pulldata():
     print(full_path)
     data.to_csv(full_path, index=False)
     
-
-# pulldata()

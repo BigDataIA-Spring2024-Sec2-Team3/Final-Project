@@ -7,3 +7,17 @@ pydantic
 bcrypt
 sqlalchemy
 boto3
+PyPDF2
+tabula-py
+langchain_openai
+langchain
+pinecone-client
+uuid
+redis
+types-redis
+lxml
+bs4
+fastapi
+uvicorn
+snowflake-sqlalchemy
+streamlit

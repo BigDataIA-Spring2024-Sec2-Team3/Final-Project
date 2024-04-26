@@ -18,3 +18,5 @@ matplotlib
 pandas
 tabula-py
 pypdf2
+langchain_openai
+langchain

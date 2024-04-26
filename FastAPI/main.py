@@ -1,3 +1,4 @@
+## API to get the data
 from fastapi import FastAPI,HTTPException
 from fastapi.responses import JSONResponse
 import snowflake.connector
@@ -26,12 +27,27 @@ def connect_to_snowflake():
     return conn
 
 
-@app.get("/snowflake-data")
-async def get_snowflake_data():
+@app.get("/snowflake-data/")
+async def get_snowflake_data(table:str = 'MAIN_MAP_LASTWEEK_MODEL'):
     try:
         conn = connect_to_snowflake()
         cursor = conn.cursor()
-        cursor.execute("SELECT TOP 100 ROW_ID, LATITUDE, LONGITUDE FROM incident_reports WHERE LATITUDE is not null AND LONGITUDE is not null")
+        query = f"SELECT * FROM CRIMES.DBT_PKALANI.{table}"
+        cursor.execute(query)
+        result = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return {"data": result}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/snowflake-heatmap-data/")
+async def get_snowflake_data(table: str ='HEATMAP_DOW'):
+    try:
+        conn = connect_to_snowflake()
+        cursor = conn.cursor()
+        query = f"SELECT * FROM CRIMES.DBT_PKALANI.{table}"
+        cursor.execute(query)
         result = cursor.fetchall()
         cursor.close()
         conn.close()
