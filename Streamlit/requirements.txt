@@ -4,3 +4,5 @@ python-dotenv
 OpenAI
 pandas
 leafmap
+google-search-results
+requests

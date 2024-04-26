@@ -1,0 +1,7 @@
+requests
+pydantic
+fastapi
+python-dotenv
+google-search-results
+langchain-community
+langchain_pinecone
