@@ -6,7 +6,7 @@ import re
 import streamlit as st
 import pandas as pd
 import requests 
-
+import base64
 
 load_dotenv(override=True)
 
@@ -32,7 +32,7 @@ def connect_to_snowflake():
         st.error(f"An error occurred while connecting to Snowflake: {e}")
     return conn, cursor
 
-def register_new_user(username, password, full_name, email, role):
+def register_new_user(username, password, full_name, email):
     conn, cursor = connect_to_snowflake()
     try:
         if conn is None or cursor is None:
@@ -48,7 +48,7 @@ def register_new_user(username, password, full_name, email, role):
             return False, "Password must contain at least one letter, one number, and one special character"
 
         hashed_password = hashlib.sha256(password.encode()).hexdigest()
-        cursor.execute(f"INSERT INTO users_project (username, password, full_name, email, role) VALUES ('{username}', '{hashed_password}', '{full_name}', '{email}', '{role}')")
+        cursor.execute(f"INSERT INTO users_project (username, password, full_name, email) VALUES ('{username}', '{hashed_password}', '{full_name}', '{email}')")
         conn.commit()
         return True, "Sign-up successful! Please proceed to login."
         
@@ -64,14 +64,14 @@ def validate_user_credentials(username, password):
     conn, cursor = connect_to_snowflake()
     try:
         if conn and cursor:
-            cursor.execute(f"SELECT user_id, password, role FROM users_project WHERE username = '{username}'")
+            cursor.execute(f"SELECT user_id, password FROM users_project WHERE username = '{username}'")
             result = cursor.fetchone()
             if result:
-                user_id, stored_password, user_role = result
+                user_id, stored_password = result
                 hashed_password = hashlib.sha256(password.encode()).hexdigest()
                 if hashed_password == stored_password:
-                    return True, user_id, user_role
-        return False, None, None
+                    return True, user_id
+        return False, None
     except Exception as e:
         st.error(f"An error occurred: {e}")
     finally:
@@ -79,7 +79,8 @@ def validate_user_credentials(username, password):
             cursor.close()
         if conn:
             conn.close()
-    return False, None, None
+    return False, None
+
 
 @st.cache_data
 def fetch_heatmap_crime_data(input_str):
