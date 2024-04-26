@@ -31,17 +31,25 @@ In urban environments like San Francisco, ensuring personal safety requires not 
 # PROJECT GOALS:
 
 **Enhance Personal Safety**: Develop a platform to empower individuals with the knowledge and resources necessary to make informed decisions about their personal safety in urban environments, particularly in areas like San Francisco.
+
 **Simplify Legal Understanding**: Provide users with easy access to understandable explanations of applicable laws and regulations in various everyday situations, thereby demystifying complex legal terminology and documents.
+
 **Reduce Strain on Emergency Services**: Offer guidance on non-emergency legal matters to alleviate unnecessary burdens on emergency response systems, ensuring that resources are available for genuine emergencies.
+
 **Increase Community Awareness**: Foster a sense of community awareness by promoting knowledge-sharing and collaboration among users to create a safer environment for everyone.
 
 # LEARNING OUTCOMES:
 
 **Legal Knowledge**: Gain a deeper understanding of applicable laws and regulations in urban environments, particularly those relevant to personal safety and non-emergency situations.
+
 **Technical Skills**: Develop proficiency in building a user-friendly platform, integrating legal guidance features, and implementing interactive elements for user engagement.
+
 **Problem-Solving**: Enhance problem-solving skills by addressing the challenge of simplifying complex legal concepts and making them accessible to a wide audience.
-Community Engagement: Learn the importance of community engagement in promoting safety and well-being, and how technology can facilitate collaboration and information-sharing among community members.
+
+**Community Engagement**: Learn the importance of community engagement in promoting safety and well-being, and how technology can facilitate collaboration and information-sharing among community members.
+
 **Ethical Considerations**: Understand the ethical implications of providing legal guidance through a technological platform and the responsibility to ensure accuracy and fairness in information dissemination.
+
 **Impact Assessment**: Evaluate the impact of the project on community safety and emergency response systems, and identify areas for improvement and further development based on user feedback and data analysis.
 
 
