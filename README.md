@@ -27,7 +27,7 @@ VigilantSF is your go-to app for staying safe and informed. Get real-time insigh
 ![NUMPY](https://camo.githubusercontent.com/9a944119b0e3fd4786e3ece479d92267a043b3f238101dfa13ceee104956742d/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f2d4170706c69636174696f6e2d79656c6c6f773f7374796c653d666f722d7468652d6261646765)
 
 
-# FOLDER STRUCTURE 
+# FOLDER STRUCTURE:
 ```
 📦 FinalProject
 ├─ .github
