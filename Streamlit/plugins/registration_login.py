@@ -50,5 +50,11 @@ def show_registration_login():
                     st.experimental_rerun()
             st.markdown("<hr/>", unsafe_allow_html=True)
 
+def log_out():
+    st.session_state.logged_in = False
+    st.session_state.user_id = None
+    st.success("Logged out successfully!")
+    st.experimental_rerun()
+
 if __name__ == "__main__":
     show_registration_login()
