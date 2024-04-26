@@ -13,7 +13,7 @@ import boto3
 def ai_law_help():
 
     st.title("ChatGPT-like clone")
-    FASTAPI_URL= 'http://0.0.0.0:8000/chat/'
+    FASTAPI_URL= 'http://fastapi2:8000/chat/'
     
     # Set a default model
     if "openai_model" not in st.session_state:
