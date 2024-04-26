@@ -81,7 +81,7 @@ def validate_user_credentials(username, password):
             conn.close()
     return False, None, None
 
-# @st.cache_data
+@st.cache_data
 def fetch_crime_data(input_str):
     try:
         with st.spinner("Loading"):
