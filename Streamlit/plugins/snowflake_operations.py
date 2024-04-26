@@ -32,7 +32,7 @@ def connect_to_snowflake():
         st.error(f"An error occurred while connecting to Snowflake: {e}")
     return conn, cursor
 
-def register_new_user(username, password, full_name, email, role):
+def register_new_user(username, password, full_name, email):
     conn, cursor = connect_to_snowflake()
     try:
         if conn is None or cursor is None:
@@ -48,7 +48,7 @@ def register_new_user(username, password, full_name, email, role):
             return False, "Password must contain at least one letter, one number, and one special character"
 
         hashed_password = hashlib.sha256(password.encode()).hexdigest()
-        cursor.execute(f"INSERT INTO users_project (username, password, full_name, email, role) VALUES ('{username}', '{hashed_password}', '{full_name}', '{email}', '{role}')")
+        cursor.execute(f"INSERT INTO users_project (username, password, full_name, email) VALUES ('{username}', '{hashed_password}', '{full_name}', '{email}')")
         conn.commit()
         return True, "Sign-up successful! Please proceed to login."
         
@@ -64,14 +64,14 @@ def validate_user_credentials(username, password):
     conn, cursor = connect_to_snowflake()
     try:
         if conn and cursor:
-            cursor.execute(f"SELECT user_id, password, role FROM users_project WHERE username = '{username}'")
+            cursor.execute(f"SELECT user_id, password FROM users_project WHERE username = '{username}'")
             result = cursor.fetchone()
             if result:
-                user_id, stored_password, user_role = result
+                user_id, stored_password = result
                 hashed_password = hashlib.sha256(password.encode()).hexdigest()
                 if hashed_password == stored_password:
-                    return True, user_id, user_role
-        return False, None, None
+                    return True, user_id
+        return False, None
     except Exception as e:
         st.error(f"An error occurred: {e}")
     finally:
@@ -79,35 +79,8 @@ def validate_user_credentials(username, password):
             cursor.close()
         if conn:
             conn.close()
-    return False, None, None
+    return False, None
 
-# @st.cache_data
-def fetch_crime_data(input_str):
-    try:
-        with st.spinner("Loading"):
-
-            if input_str == 'Past Week':
-                table = 'MAIN_MAP_LASTWEEK_MODEL'
-            elif input_str == 'Past Month':
-                table = 'MAIN_MAP_LASTMONTH_MODEL'
-            elif input_str == 'Past Year':
-                table = 'MAIN_MAP_LASTYEAR_MODEL'
-            elif input_str == 'All Data':
-                table = 'MAIN_MAP_ALL_MODEL'
-            link = f"http://localhost:8000/snowflake-heatmap-data/?table={table}"
-            response = requests.get(link)
-            data = response.json()['data']
-            
-            if data:
-                df = pd.DataFrame(data, columns=['Column0','latitude', 'longitude'])
-                df['latitude'] = pd.to_numeric(df['latitude'], errors='coerce')
-                df['longitude'] = pd.to_numeric(df['longitude'], errors='coerce')
-                df['Column0'] = df['Column0'].apply(lambda x: x * 10)  # Scale factor example
-                return df
-            else:
-                st.write("No data available.")
-    except Exception as e:
-        st.error(f"An error occurred while fetching crime data: {e}")
 
 @st.cache_data
 def fetch_heatmap_crime_data(input_str):
@@ -124,7 +97,7 @@ def fetch_heatmap_crime_data(input_str):
                 table = 'HEATMAP_YEARLY'
             elif input_str == 'Category':
                 table = 'HEATMAP_CAT'
-            link = f"http://localhost:8000/snowflake-heatmap-data/?table={table}"
+            link = f"http://fastapi:8075/snowflake-heatmap-data/?table={table}"
 
             response = requests.get(link)
             data = response.json()['data']
@@ -138,15 +111,13 @@ def fetch_heatmap_crime_data(input_str):
                 unique_elements = df['Column0'].unique()
 
 
-                correct_order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-                correct_order = ['Morning','Afternoon','Evening','Late Night']
+                correct_order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday','Morning','Afternoon','Evening','Late Night']
                 if input_str in [ 'Days of Week', 'Time of Day','Holidays'] :
                     unique_elements = pd.Categorical(unique_elements, categories=correct_order, ordered=True)
                     unique_elements = unique_elements.sort_values()
                 if input_str == 'Year':
                     unique_elements.sort()
 
-                # df=df[df['Crimes']>=15]
                 df['size'] = df['Crimes'].apply(lambda x: x * 10)  # Scale factor example
                 return df,unique_elements
             else:

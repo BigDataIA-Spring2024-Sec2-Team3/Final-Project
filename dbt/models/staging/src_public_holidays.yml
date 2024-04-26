@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: public_holidays
+    database: government_essentials
+    schema: cybersyn
+    tables:
+      - name: public_holiday_calendar

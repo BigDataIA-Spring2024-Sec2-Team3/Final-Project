@@ -114,12 +114,14 @@ def dashboard():
     col1, col2 = st.columns(2)
     with col1:
         st.subheader('Incidents by Day of Week')
-        day_of_week_counts = df['INCIDENT_DAY_OF_WEEK'].value_counts()
+        # Use filtered_df instead of df
+        day_of_week_counts = filtered_df['INCIDENT_DAY_OF_WEEK'].value_counts()
         st.bar_chart(day_of_week_counts)
 
     with col2:
         st.subheader('Incidents by Year')
-        year_counts = df['INCIDENT_YEAR'].value_counts()
+        # Use filtered_df instead of df
+        year_counts = filtered_df['INCIDENT_YEAR'].value_counts()
         st.bar_chart(year_counts)
 
     # Row 2: Top 15 Incident Categories and Interactive Bar Chart

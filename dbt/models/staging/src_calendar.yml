@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: calendar
+    database: government_essentials
+    schema: cybersyn
+    tables:
+      - name: calendar_index
